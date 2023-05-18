@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.authority.system.mapper.BSampleMapper">
+    
+    <resultMap type="BSample" id="BSampleResult">
+        <result property="sampleId"    column="sample_id"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="sampleKey"    column="sample_key"    />
+        <result property="sampleValue"    column="sample_value"    />
+        <result property="sampleType"    column="sample_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBSampleVo">
+        select sample_id, sample_name, sample_key, sample_value, sample_type, create_by, create_time, update_by, update_time, remark from b_sample
+    </sql>
+
+    <select id="selectBSampleList" parameterType="BSample" resultMap="BSampleResult">
+        <include refid="selectBSampleVo"/>
+        <where>  
+            <if test="sampleName != null  and sampleName != ''"> and sample_name like concat('%', #{sampleName}, '%')</if>
+            <if test="sampleKey != null  and sampleKey != ''"> and sample_key = #{sampleKey}</if>
+            <if test="sampleValue != null  and sampleValue != ''"> and sample_value = #{sampleValue}</if>
+            <if test="sampleType != null  and sampleType != ''"> and sample_type = #{sampleType}</if>
+        </where>
+    </select>
+    
+    <select id="selectBSampleBySampleId" parameterType="Integer" resultMap="BSampleResult">
+        <include refid="selectBSampleVo"/>
+        where sample_id = #{sampleId}
+    </select>
+        
+    <insert id="insertBSample" parameterType="BSample" useGeneratedKeys="true" keyProperty="sampleId">
+        insert into b_sample
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sampleName != null">sample_name,</if>
+            <if test="sampleKey != null">sample_key,</if>
+            <if test="sampleValue != null">sample_value,</if>
+            <if test="sampleType != null">sample_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sampleName != null">#{sampleName},</if>
+            <if test="sampleKey != null">#{sampleKey},</if>
+            <if test="sampleValue != null">#{sampleValue},</if>
+            <if test="sampleType != null">#{sampleType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBSample" parameterType="BSample">
+        update b_sample
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sampleName != null">sample_name = #{sampleName},</if>
+            <if test="sampleKey != null">sample_key = #{sampleKey},</if>
+            <if test="sampleValue != null">sample_value = #{sampleValue},</if>
+            <if test="sampleType != null">sample_type = #{sampleType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where sample_id = #{sampleId}
+    </update>
+
+    <delete id="deleteBSampleBySampleId" parameterType="Integer">
+        delete from b_sample where sample_id = #{sampleId}
+    </delete>
+
+    <delete id="deleteBSampleBySampleIds" parameterType="String">
+        delete from b_sample where sample_id in 
+        <foreach item="sampleId" collection="array" open="(" separator="," close=")">
+            #{sampleId}
+        </foreach>
+    </delete>
+</mapper>
